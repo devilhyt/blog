@@ -1,20 +1,32 @@
 ﻿# How to run this project
 
-- Install dependencies:
-    > $ npm install
+1. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-- Run the database using Docker:
-    > $ docker compose -f ./docker-services/docker-compose.yml up -d
+2. Run the database using Docker:
+    ```bash
+    docker compose -f ./docker-services/docker-compose.yml up -d
+    ```
 
-- Generate fake data:
-    > node ./docker-services/fake.js
+3. Generate fake data:
+    ```bash
+    node ./docker-services/fake.js
+    ```
 
-- Run the app:
+4. Run the app:
     - On MacOS or Linux:
-        > $ DEBUG=blog:* npm start
+        ```bash
+        DEBUG=blog:* npm start
+        ```
 
     - On Windows Command Prompt:
-        > \>set DEBUG=blog:* & npm start
+        ```cmd
+        set DEBUG=blog:* & npm start
+        ```
 
     - On Windows PowerShell:
-        > PS> $env:DEBUG='blog:*'; npm start
+        ```powershell
+        $env:DEBUG='blog:*'; npm start
+        ```
