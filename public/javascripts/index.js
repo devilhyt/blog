@@ -41,7 +41,10 @@ const reloadArticles = async() => {
         if (i % 3 === 0) {
             articleList += `<div class="row mb-3">`
         }
-        const articleContent = articles[i].content.slice(0, 100);
+        let articleContent = articles[i].content;
+        if (articleContent.length > 100) {
+            articleContent = articleContent.slice(0, 100) + '...';
+        }
         articleList += `
         <div class="col-sm-4">
             <div class="card">
