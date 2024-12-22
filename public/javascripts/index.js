@@ -45,6 +45,7 @@ const reloadArticles = async() => {
         if (articleContent.length > 100) {
             articleContent = articleContent.slice(0, 100) + '...';
         }
+        let createdAt = new Date(articles[i].createdAt).toLocaleString('Zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
         articleList += `
         <div class="col-sm-4">
             <div class="card">
@@ -59,6 +60,7 @@ const reloadArticles = async() => {
                     </h5>
                     <h6 class="card-subtitle mb-2 text-muted">${articles[i].name}</h6>
                     <p class="card-text">${escapeHtml(articleContent)}</p>
+                    <p class="card-text"><small class="text-muted">${createdAt}</small></p>
                 </div>
             </div>
         </div>
