@@ -73,4 +73,10 @@ const reloadArticles = async() => {
 
 document.querySelectorAll('input[name=btnradio]').forEach(input => input.addEventListener('change', reloadArticles))
 document.getElementById('search-articles').addEventListener('click', reloadArticles)
+document.getElementById('keyword').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        reloadArticles();
+    }
+})
 reloadArticles();
