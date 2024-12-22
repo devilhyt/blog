@@ -1,8 +1,9 @@
-let { promisePool: mysql } = require('../lib/mysql');
-let { register } = require('../app/view-model/users');
-let { addArticle } = require('../app/view-model/articles');
-let { addComment } = require('../app/view-model/comments');
+let { promisePool: mysql } = require('./lib/mysql');
+let { register } = require('./app/view-model/users');
+let { addArticle } = require('./app/view-model/articles');
+let { addComment } = require('./app/view-model/comments');
 const { faker } = require('@faker-js/faker');
+const articles = require('./dataset/articles.json');
 
 const authorAmount = 5; // 作者數量
 const userAmount = 50; // 一般使用者數量
@@ -41,7 +42,7 @@ async function generateUsers(authorAmount, userAmount) {
  * 產生文章假資料
  * @param {number} authorAmount 作者數量
  */
-async function generateArticles(authorAmount) {
+async function generateArticles(authorAmount, articles) {
     const categories = ['生活', '科技', '美食', '理財'];
     await mysql.execute(`
         CREATE TABLE \`articles\` (
@@ -57,11 +58,18 @@ async function generateArticles(authorAmount) {
             CONSTRAINT \`article_ibfk_4\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
-    for (let i = 0; i < articleAmount; ++i) {
-        let title = faker.lorem.sentence();
-        let category = categories[Math.floor(Math.random() * 4)];
+
+    // Shuffle articles list
+    for (let i = articles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [articles[i], articles[j]] = [articles[j], articles[i]];
+    }
+
+    for (let i = 0; i < articles.length; ++i) {
+        let title = articles[i].title;
+        let category = articles[i].category;
         let userId = Math.floor(Math.random() * authorAmount + 2);
-        let content = faker.lorem.paragraphs();
+        let content = articles[i].content;
         await addArticle(title, category, userId, content);
     }
 }
@@ -114,7 +122,7 @@ async function dropAllTable() {
 async function main() {
     await dropAllTable();
     await generateUsers(authorAmount, userAmount);
-    await generateArticles(authorAmount);
+    await generateArticles(authorAmount, articles);
     await generateMessages();
     process.exit();
 }

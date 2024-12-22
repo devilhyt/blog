@@ -12,7 +12,7 @@
 
 3. Generate fake data:
     ```bash
-    node ./docker-services/fake.js
+    node ./fake.js
     ```
 
 4. Run the app:
