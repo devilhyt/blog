@@ -11,6 +11,7 @@ const showArticle = async () => {
     }).then(async (res) => {
         return await res.json();
     });
+    let createdAt = new Date(response[0].createdAt).toLocaleString('Zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
 
     let articleContent = `
     <div class="card-header">
@@ -20,6 +21,7 @@ const showArticle = async () => {
         <h1 class="card-title">${ escapeHtml(response[0].title) }</h1>
         <h4 class="card-subtitle mb-2 text-muted">${ response[0].name }</h4>
         <p class="card-text">${ escapeHtml(response[0].content) }</p>
+        <p class="card-text"><small class="text-muted">${createdAt}</small></p>
     </div>
     `;
 
@@ -138,5 +140,14 @@ const reloadAll = async () => {
 };
 
 document.getElementById(`write-comment`).addEventListener('keyup', reloadCommentBtn);
+document.getElementById('write-comment').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (document.getElementById('write-comment').value.trim() === '') {
+            return;
+        }
+        addComment();
+    }
+})
 document.getElementById(`add-comment`).addEventListener('click', addComment);
 reloadAll();
