@@ -5,10 +5,10 @@ let { addComment } = require('./app/view-model/comments');
 const { faker } = require('@faker-js/faker');
 const articles = require('./dataset/articles.json');
 
-const authorAmount = 5; // 作者數量
-const userAmount = 50; // 一般使用者數量
-const articleAmount = 50; // 文章數量
+const authorAmount = 10; // 作者數量
+const userAmount = 90; // 一般使用者數量
 const commentAmount = 100; // 留言數量
+const articleAmount = articles.length; // 文章數量
 
 /**
  * 產生使用者假資料
