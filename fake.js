@@ -2,8 +2,8 @@ let { promisePool: mysql } = require('./lib/mysql');
 let { register } = require('./app/view-model/users');
 let { addArticle } = require('./app/view-model/articles');
 let { addComment } = require('./app/view-model/comments');
-const { faker } = require('@faker-js/faker');
 const articles = require('./dataset/articles.json');
+const messages = require('./dataset/messages.json');
 
 const authorAmount = 10; // 作者數量
 const userAmount = 90; // 一般使用者數量
@@ -77,7 +77,7 @@ async function generateArticles(authorAmount, articles) {
 /**
  * 產生留言假資料
  */
-async function generateMessages() {
+async function generateMessages(messages) {
     await mysql.execute(`
         CREATE TABLE \`messages\` (
             \`id\` int NOT NULL AUTO_INCREMENT,
@@ -96,7 +96,7 @@ async function generateMessages() {
     for (let i = 0; i < commentAmount; ++i) {
         let userId = Math.floor(Math.random() * userAmount + 2);
         let articleId = Math.floor(Math.random() * articleAmount + 1);
-        let content = faker.lorem.sentence();
+        let content = messages[i];
         await addComment(userId, articleId, content);
     }
 }
@@ -123,7 +123,7 @@ async function main() {
     await dropAllTable();
     await generateUsers(authorAmount, userAmount);
     await generateArticles(authorAmount, articles);
-    await generateMessages();
+    await generateMessages(messages);
     process.exit();
 }
 
