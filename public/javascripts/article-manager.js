@@ -3,6 +3,7 @@ import { escapeHtml } from './utils.js';
 let currentPage = 1;
 let searchTitle = '';
 let searchCategory = '';
+const articlesPerPage = 10;
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -36,12 +37,13 @@ const deleteArticle = async (id) => {
 const reloadArticlesList = async (articles) => {
     let articlesList = '';
     console.log(articles);
+    const start = (currentPage - 1) * articlesPerPage + 1;
     for (let i = 0; i < articles.length; i++) {
         let createdAt = new Date(articles[i].createdAt).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false })
         let updatedAt = new Date(articles[i].updatedAt).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false })
         articlesList += `
         <tr>
-            <th scope="row">${articles[i].id}</th>
+            <th scope="row">${start + i}</th>
             <td>${escapeHtml(articles[i].title)}</td>
             <td>${articles[i].category}</td>
             <td>${articles[i].name}(${articles[i].account})</td>
@@ -86,8 +88,8 @@ const searchArticles = async () => {
 }
 
 const getPageArticles = async (articles, page) => {
-    const start = (page - 1) * 10;
-    const end = start + 10;
+    const start = (page - 1) * articlesPerPage;
+    const end = start + articlesPerPage;
     return articles.slice(start, end);
 }
 
@@ -115,7 +117,6 @@ const reloadPageNav = async (pageAmount) => {
     } else {
         pageHtml += `<li class="page-item disabled"><span class="page-link">＞</span></li>`;
     }
-
     pageUl.innerHTML = pageHtml;
 }
 
@@ -135,6 +136,12 @@ const reloadAll = async () => {
     const PageArticles = await getPageArticles(articles, currentPage);
     await reloadArticlesList(PageArticles);
     await reloadPageNav(pageAmount);
+    // Save current page in URL params
+    const url = new URL(window.location);
+    url.searchParams.set('page', currentPage);
+    url.searchParams.set('searchTitle', searchTitle);
+    url.searchParams.set('searchCategory', searchCategory);
+    window.history.pushState({}, '', url);
 }
 
 
