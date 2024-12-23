@@ -10,12 +10,16 @@
     docker compose -f ./docker-services/docker-compose.yml up -d
     ```
 
-3. Generate fake data:
+3. Rename the file `.env.example` to `.env`. 
+    - This file contains the token secret used to sign the JWTs.
+    - You should generate a new secret and replace the value of the `TOKEN_SECRET`.
+
+4. Generate fake data:
     ```bash
     node ./fake.js
     ```
 
-4. Run the app:
+5. Run the app:
     - On MacOS or Linux:
         ```bash
         DEBUG=blog:* npm start
