@@ -12,7 +12,7 @@ async function getArticlesDb(id, title = "", category = "") {
         const [rows, fields] = await mysql.execute('SELECT articles.id, title, category, user_id, users.name, users.account, content, articles.createdAt, articles.updatedAt FROM `articles` INNER JOIN `users` ON articles.user_id = users.id WHERE articles.id=?', [id]);
         return rows;
     } else {
-        const [rows, fields] = await mysql.execute('SELECT articles.id, title, category, user_id, users.name, users.account, content, articles.createdAt, articles.updatedAt FROM `articles` INNER JOIN `users` ON articles.user_id = users.id WHERE articles.title LIKE ? AND category LIKE ?', [`%${title}%`, `%${category}%`]);
+        const [rows, fields] = await mysql.execute('SELECT articles.id, title, category, user_id, users.name, users.account, content, articles.createdAt, articles.updatedAt FROM `articles` INNER JOIN `users` ON articles.user_id = users.id WHERE articles.title LIKE ? AND category LIKE ? ORDER BY articles.createdAt DESC', [`%${title}%`, `%${category}%`]);
 
         // // debug
         // const sql = mysql.format('SELECT articles.id, title, category, user_id, users.name, users.account, content, articles.createdAt, articles.updatedAt FROM `articles` INNER JOIN `users` ON articles.user_id = users.id WHERE articles.title LIKE ? AND category LIKE ?', [`%${title}%`, `%${category}%`]);
