@@ -9,8 +9,8 @@ var { getArticlesDb, addArticleDb, editArticleDb, deleteArticleDb } = require('.
  * @param {number} category 文章分類
  * @returns {object} 文章資料
  */
-async function getArticles(id, title, category) {
-    const articles = await getArticlesDb(id, title, category);
+async function getArticles(id, title, category, page = 0, articlePerPage = 0) {
+    const articles = await getArticlesDb(id, title, category, page, articlePerPage);
     return articles;
 }
 

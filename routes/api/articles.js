@@ -8,8 +8,8 @@ var router = express.Router();
     get /api/articles
 */
 router.get('/', async function (req, res, next) {
-    const { id, title, category } = req.query;
-    const articles = await getArticles(id, title, category);
+    const { id, title, category, page, articlesPerPage} = req.query;
+    const articles = await getArticles(id, title, category, page, articlesPerPage);
     return res.json(articles)
 
 });

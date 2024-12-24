@@ -7,7 +7,7 @@
  * @param {number} category 文章分類
  * @returns {object} 文章資料
  */
-async function getArticlesDb(id, title = "", category = "") {
+async function getArticlesDb(id, title = "", category = "", page = 0, articlePerPage = 0) {
     if (id) {
         const query = 
         `SELECT 
@@ -27,7 +27,7 @@ async function getArticlesDb(id, title = "", category = "") {
 
         return rows;
     } else {
-        const query = 
+        let query = 
         `SELECT 
             articles.id, 
             title, 
@@ -41,6 +41,10 @@ async function getArticlesDb(id, title = "", category = "") {
         FROM articles INNER JOIN users ON articles.user_id = users.id 
         WHERE articles.title LIKE ? AND category LIKE ? 
         ORDER BY articles.createdAt DESC`;
+
+        if (page > 0 && articlePerPage > 0) {
+            query += ` LIMIT ${articlePerPage} OFFSET ${articlePerPage * (page - 1)}`;
+        }
 
         const [rows, fields] = await mysql.execute(query, [`%${title}%`, `%${category}%`]);
 
