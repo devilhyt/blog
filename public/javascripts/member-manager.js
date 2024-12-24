@@ -91,6 +91,10 @@ const reloadMemberData = async (nowPage) => {
     }
 
     pageId.innerHTML = str;
+    // Save current page in URL params
+    const url = new URL(window.location);
+    url.searchParams.set('page', globalNowPage);
+    window.history.pushState({}, '', url);
 };
 
 const getDataLength = async (nowPage, response) => {
