@@ -18,17 +18,19 @@
 						<li class="nav-item">
 							<a class="nav-link active" aria-current="page" href="/">Home</a>
 						</li>
-						{% if (isLoggedIn) %}
-							<li>
-								<a class="nav-link" id="userdata" href="/userdata">會員資料</a>
-							</li>
-							<li>
-								<a class="nav-link" id="logout" href="/">會員登出</a>
-							</li>
-						{% else %}
-							<li>
-								<a class="nav-link" href="/users/">會員登入</a>
-							</li>
+						{% if (isLoggedIn != null) %}
+							{% if (isLoggedIn) %}
+								<li>
+									<a class="nav-link" id="userdata" href="/userdata">會員資料</a>
+								</li>
+								<li>
+									<a class="nav-link" id="logout" href="/">會員登出</a>
+								</li>
+							{% else %}
+								<li>
+									<a class="nav-link" href="/users/">會員登入</a>
+								</li>
+							{% endif %}
 						{% endif %}
 						{% if isAdmin %}
 							<li class="nav-item dropdown">
