@@ -4,15 +4,6 @@ var { promisePool: mysql } = require('../../lib/mysql');
 var { register, updateAccount } = require('../../app/view-model/users');
 var router = express.Router();
 
-/*
-  獲取使用者資訊
-  get /api/users
-*/
-router.get('/', async function (req, res, next) {
-  const [rows, fields] = await mysql.execute('SELECT id, is_admin, name, account FROM `users`');
-  return res.json(rows)
-});
-
 
 /*
   註冊
