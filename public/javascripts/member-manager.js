@@ -8,6 +8,9 @@ let username = '';
 let globalNowPage = 1;
 
 const deleteMember = async (id, nowPage) => {
+    if(!confirm('確定要刪除此會員嗎？')) {
+        return;
+    }
     const response = await fetch(`/api/member`, {
         method: 'DELETE',
         headers: {

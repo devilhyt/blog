@@ -14,6 +14,9 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
  * @param {number} id 文章ID
  */
 const deleteArticle = async (id) => {
+    if (!confirm('確定要刪除這篇文章嗎？')) {
+        return;
+    }
     const response = await fetch(`/api/articles`, {
         method: 'DELETE',
         headers: {
