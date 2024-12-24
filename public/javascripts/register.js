@@ -20,7 +20,7 @@ const register = async (event) => {
     });
 
     if (response.status) {
-        location = '/';
+        location = '/users';
     } else {
         document.getElementById('register-warning').style.visibility = "visible";
     }
