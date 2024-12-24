@@ -5,8 +5,18 @@
  * @param {string} account 帳號
  * @returns {object} 帳號資訊
  */
-async function getAccount(account) {
-    const [rows, fields] = await mysql.execute('SELECT * FROM `users` WHERE account = ?', [account]);
+async function getAccountDb(account) {
+    const query =
+    `SELECT 
+        id, 
+        is_admin, 
+        name, 
+        account, 
+        password, 
+        createdAt, 
+        updatedAt 
+    FROM users WHERE account = ?`;
+    const [rows, fields] = await mysql.execute(query, [account]);
     return rows;
 }
 
@@ -16,7 +26,18 @@ async function getAccount(account) {
  * @returns {object} 帳號資訊
  */
 async function getAccountByIdDb(id) {
-    const [rows, fields] = await mysql.execute('SELECT * FROM `users` WHERE id = ?', [id]);
+    const query =
+    `SELECT 
+        id, 
+        is_admin, 
+        name, 
+        account, 
+        password, 
+        createdAt, 
+        updatedAt 
+    FROM users WHERE id = ?`;
+    
+    const [rows, fields] = await mysql.execute(query, [id]);
     return rows;
 }
 
@@ -27,8 +48,10 @@ async function getAccountByIdDb(id) {
  * @param {string} hashedPassword 雜湊密碼
  */
 async function registerAccount(name, account, hashedPassword, isAdmin) {
+    const query = 'INSERT INTO `users` (is_admin, name, account, password) VALUES (?, ?, ?, ?)';
+
     try {
-        const [rows, fields] = await mysql.execute('INSERT INTO `users` (is_admin, name, account, password) VALUES (?, ?, ?, ?)', [isAdmin, name, account, hashedPassword]);
+        const [rows, fields] = await mysql.execute(query, [isAdmin, name, account, hashedPassword]);
         return true;
     }
     catch (err) {
@@ -44,17 +67,19 @@ async function registerAccount(name, account, hashedPassword, isAdmin) {
  * @param {string} hashedPassword 雜湊密碼
  */
 async function updateAccountDb(id, name, hashedPassword) {
-
+    const updateNameQuery = 'UPDATE `users` SET name = ? WHERE id = ?';
+    const updatePasswordQuery = 'UPDATE `users` SET password = ? WHERE id = ?';
+    
     if(name){
         try {
-            const [rows, fields] = await mysql.execute('UPDATE `users` SET name = ? WHERE id = ?', [name, id]);
+            const [rows, fields] = await mysql.execute(updateNameQuery, [name, id]);
         } catch (err) {
             return false;
         }
     }
     if(hashedPassword){
         try {
-            const [rows, fields] = await mysql.execute('UPDATE `users` SET password = ? WHERE id = ?', [hashedPassword, id]);
+            const [rows, fields] = await mysql.execute(updatePasswordQuery, [hashedPassword, id]);
         } catch (err) {
             return false;
         }
@@ -62,4 +87,4 @@ async function updateAccountDb(id, name, hashedPassword) {
     return true;
 }
 
-module.exports = { getAccount, registerAccount, updateAccountDb, getAccountByIdDb };
+module.exports = { getAccountDb, registerAccount, updateAccountDb, getAccountByIdDb };

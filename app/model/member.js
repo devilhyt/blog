@@ -5,12 +5,30 @@
  * @returns {object} 使用者資訊
  */
 async function getUsersDb(isAdmin='', name='') {
-    const [rows, fields] = await mysql.execute('SELECT `users`.`id`,`users`.`is_admin`, `users`.`name`, `users`.`account` FROM `users` WHERE users.is_admin LIKE ? AND users.name LIKE ?', [`%${isAdmin}%`, `%${name}%`]);
+    const query =
+    `SELECT 
+        id, 
+        is_admin, 
+        name, 
+        account 
+    FROM users 
+    WHERE is_admin LIKE ? AND name LIKE ?`;
+    
+    const [rows, fields] = await mysql.execute(query, [`%${isAdmin}%`, `%${name}%`]);
     return rows;
 }
 
 async function getSingleUserDb(id) {
-    const [rows, fields] = await mysql.execute('SELECT `users`.`id`,`users`.`is_admin`, `users`.`name`, `users`.`account` FROM `users` WHERE users.id = ?', [id]);
+    const query = 
+    `SELECT 
+        id, 
+        is_admin, 
+        name, 
+        account
+    FROM users
+    WHERE id = ?`;
+
+    const [rows, fields] = await mysql.execute(query, [id]);
     return rows[0];
 }
 
@@ -20,7 +38,8 @@ async function getSingleUserDb(id) {
  * @returns {boolean} 是否刪除成功
  */
 async function deleteUserDb(id) {
-    const [rows, fields] = await mysql.execute('DELETE FROM `users` WHERE id = ?', [id]);
+    const query = 'DELETE FROM `users` WHERE id = ?';
+    const [rows, fields] = await mysql.execute(query, [id]);
     if (rows.affectedRows === 0) {
         return false;
     } else {
@@ -29,7 +48,8 @@ async function deleteUserDb(id) {
 }
 
 async function editUserDb(id, identity, member) {
-    const [rows, fields] = await mysql.execute('UPDATE `users` SET is_admin = ?, name = ? WHERE id = ?', [identity, member, id]);
+    const query = 'UPDATE `users` SET is_admin = ?, name = ? WHERE id = ?';
+    const [rows, fields] = await mysql.execute(query, [identity, member, id]);
     if (rows.affectedRows === 0) {
         return false;
     } else {

@@ -7,7 +7,18 @@
  * @returns {string} content 留言內容
  */
 async function getComments(id) {
-    const [rows, fields] = await mysql.execute('SELECT * FROM `messages` WHERE article_id = ?', [id]);
+    const query =
+    `SELECT 
+        id,
+        user_id,
+        article_id,
+        content,
+        createdAt,
+        updatedAt
+    FROM messages 
+    WHERE article_id = ?`;
+
+    const [rows, fields] = await mysql.execute(query, [id]);
     return rows;
 }
 
@@ -19,8 +30,10 @@ async function getComments(id) {
  * @returns {boolean} 是否新增成功
  */
 async function addComment(userId, articleId, content) {
+    const query = 'INSERT INTO messages (user_id, article_id, content) VALUES (?, ?, ?)';
+
     try {
-        const [rows, fields] = await mysql.execute('INSERT INTO `messages` (user_id, article_id, content) VALUES (?, ?, ?)', [userId, articleId, content]);
+        const [rows, fields] = await mysql.execute(query, [userId, articleId, content]);
         return true;
     }
     catch (err) {

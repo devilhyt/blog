@@ -9,10 +9,40 @@
  */
 async function getArticlesDb(id, title = "", category = "") {
     if (id) {
-        const [rows, fields] = await mysql.execute('SELECT articles.id, title, category, user_id, users.name, users.account, content, articles.createdAt, articles.updatedAt FROM `articles` INNER JOIN `users` ON articles.user_id = users.id WHERE articles.id=?', [id]);
+        const query = 
+        `SELECT 
+            articles.id, 
+            title, 
+            category, 
+            user_id, 
+            users.name, 
+            users.account, 
+            content, 
+            articles.createdAt, 
+            articles.updatedAt 
+        FROM articles INNER JOIN users ON articles.user_id = users.id 
+        WHERE articles.id=?`;
+
+        const [rows, fields] = await mysql.execute(query, [id]);
+
         return rows;
     } else {
-        const [rows, fields] = await mysql.execute('SELECT articles.id, title, category, user_id, users.name, users.account, content, articles.createdAt, articles.updatedAt FROM `articles` INNER JOIN `users` ON articles.user_id = users.id WHERE articles.title LIKE ? AND category LIKE ? ORDER BY articles.createdAt DESC', [`%${title}%`, `%${category}%`]);
+        const query = 
+        `SELECT 
+            articles.id, 
+            title, 
+            category, 
+            user_id, 
+            users.name, 
+            users.account, 
+            content, 
+            articles.createdAt, 
+            articles.updatedAt 
+        FROM articles INNER JOIN users ON articles.user_id = users.id 
+        WHERE articles.title LIKE ? AND category LIKE ? 
+        ORDER BY articles.createdAt DESC`;
+
+        const [rows, fields] = await mysql.execute(query, [`%${title}%`, `%${category}%`]);
 
         // // debug
         // const sql = mysql.format('SELECT articles.id, title, category, user_id, users.name, users.account, content, articles.createdAt, articles.updatedAt FROM `articles` INNER JOIN `users` ON articles.user_id = users.id WHERE articles.title LIKE ? AND category LIKE ?', [`%${title}%`, `%${category}%`]);
@@ -30,7 +60,11 @@ async function getArticlesDb(id, title = "", category = "") {
  * @returns {boolean} 是否新增成功
  */
 async function addArticleDb(title, category, userId, content) {
-    const [rows, fields] = await mysql.execute('INSERT INTO `articles` (title, category, user_id, content, createdAt, updatedAt) VALUES (?, ?, ?, ?, now(), now())', [title, category, userId, content]);
+    const query = 
+    `INSERT INTO articles (title, category, user_id, content, createdAt, updatedAt) 
+    VALUES (?, ?, ?, ?, now(), now())`;
+
+    const [rows, fields] = await mysql.execute(query, [title, category, userId, content]);
     if (rows.affectedRows === 0) {
         return false;
     } else {
@@ -47,7 +81,11 @@ async function addArticleDb(title, category, userId, content) {
  * @returns {boolean} 是否修改成功
  */
 async function editArticleDb(id, title, category, content) {
-    const [rows, fields] = await mysql.execute('UPDATE `articles` SET title = ?, category = ?, content = ?, updatedAt = now() WHERE id = ?', [title, category, content, id]);
+    const query = 
+    `UPDATE articles SET title = ?, category = ?, content = ?, updatedAt = now() 
+    WHERE id = ?`;
+
+    const [rows, fields] = await mysql.execute(query, [title, category, content, id]);
     if (rows.affectedRows === 0) {
         return false;
     } else {
@@ -61,7 +99,11 @@ async function editArticleDb(id, title, category, content) {
  * @returns {boolean} 是否刪除成功
  */
 async function deleteArticleDb(id) {
-    const [rows, fields] = await mysql.execute('DELETE FROM `articles` WHERE id = ?', [id]);
+    const query = 
+    `DELETE FROM articles 
+    WHERE id = ?`;
+    
+    const [rows, fields] = await mysql.execute(query, [id]);
     if (rows.affectedRows === 0) {
         return false;
     } else {
