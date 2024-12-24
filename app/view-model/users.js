@@ -1,5 +1,5 @@
 ﻿require('dotenv').config();
-var { getAccount, registerAccount, updateAccountDb, getAccountByIdDb } = require('../model/users');
+var { getAccountDb, registerAccount, updateAccountDb, getAccountByIdDb } = require('../model/users');
 var argon2 = require('argon2');
 
 /**
@@ -13,7 +13,7 @@ async function register(name, account, password, isAdmin) {
     const hashedPassword = await argon2.hash(password);
 
     // 檢查帳號是否重複
-    const ret_account = await getAccount(account);
+    const ret_account = await getAccountDb(account);
     if (ret_account.length !== 0) {
         return false;
     }

@@ -1,5 +1,5 @@
 require('dotenv').config();
-var { getAccount } = require('../model/users');
+var { getAccountDb } = require('../model/users');
 const jwt = require('jsonwebtoken');
 var argon2 = require('argon2');
 
@@ -35,7 +35,7 @@ async function verifyToken(token) {
  */
 async function login(account, password) {
     // 取得符合的帳戶資料
-    const retAccount = await getAccount(account);
+    const retAccount = await getAccountDb(account);
 
     // 判斷有沒有這個帳號
     if (retAccount.length != 1) {
@@ -63,7 +63,7 @@ async function checkToken(req, res, next) {
     const token = req.signedCookies.token;
     const decoded = await verifyToken(token);
     if (decoded) {
-        const retAccount = await getAccount(decoded.account);
+        const retAccount = await getAccountDb(decoded.account);
         if (retAccount.length === 1) {
             req.isAdmin = Boolean(retAccount[0].is_admin);
             req.isLoggedIn = true;
