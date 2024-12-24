@@ -1,6 +1,6 @@
 ﻿var express = require("express");
 require('dotenv').config();
-var {getComments, addComment} = require('../../app/view-model/comments');
+var {getComments, getCommentById, addComment, deleteComment} = require('../../app/view-model/comments');
 var router = express.Router();
 
 /*
@@ -36,7 +36,13 @@ router.post('/', async function (req, res, next) {
 router.delete("/", async function (req, res, next) {
     const { id } = req.body;
 
-    if (await deleteComment(id)) {
+    const comment = await getCommentById(id);
+
+    if (!req.isAdmin && req.userId !== comment.user_id) {
+        return res.json({ status: false, message: "沒有權限" });
+    }
+
+    if (await deleteComment(id, comment.user_id)) {
         return res.json({ status: true, message: "刪除成功" });
     } else {
         return res.json({ status: false, message: "刪除失敗" });

@@ -4,6 +4,25 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
 
+const deleteComment = async (id) => {
+    if (!confirm('確定要刪除此留言嗎？')) {
+        return;
+    }
+
+    const response = await fetch('/api/comments', {
+        method: 'DELETE',
+        body: JSON.stringify({ id }),
+        headers: {
+            'content-type': 'application/json',
+        },
+    }).then(async (res) => {
+        return await res.json();
+    });
+    if (response.status) {
+        await reloadAll();
+    }
+}
+window.deleteComment = deleteComment;
 
 const showArticle = async () => {
     const response = await fetch(`/api/articles?id=${params.id}`, {
@@ -55,6 +74,12 @@ const showCommentBtn = async (userInfo) => {
 };
 
 const showComment = async () => {
+    const nowUserInfo = await fetch(`/api/member/now`, {
+        method: 'GET'
+    }).then(async (res) => {
+        return await res.json();
+    });
+
     const response = await fetch(`/api/comments?id=${params.id}`, {
         method: 'GET'
     }).then(async (res) => {
@@ -75,12 +100,23 @@ const showComment = async () => {
         });
         let commentUserName = userInfo.name;
         let commentContent = response[i].content;
+        let commentCreatedAt = new Date(response[i].createdAt).toLocaleString('Zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
 
         readComment += `
         <div class="card mb-1">
             <div class="card-body">
                 <h5 class="card-title">${ escapeHtml(commentUserName) }</h5>
                 <p class="card-text">${ escapeHtml(commentContent) }</p>
+                <div class="d-flex justify-content-between">
+                    <p class="card-text"><small class="text-muted">${commentCreatedAt}</small></p>
+        `
+        if (nowUserInfo.id === response[i].user_id || nowUserInfo.is_admin === 1) {
+            readComment += `
+                <button class="btn btn-danger btn-sm" onclick="deleteComment(${response[i].id})">刪除</button>
+            `;
+        }
+        readComment +=`
+                </div>
             </div>
         </div>
         `;
@@ -119,6 +155,7 @@ const addComment = async () => {
         document.getElementById('comment-warning').className = 'alert alert-danger';
     }
 };
+
 const reloadCommentBtn = async () => {
     const userInfo = await fetch(`/api/member/now`, {
         method: 'GET'
