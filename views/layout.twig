@@ -64,5 +64,15 @@
 		</div>
 		<script src="/javascripts/logout.js"></script>
 		<script type="text/javascript" color="211,88,106" pointcolor="211,88,106" opacity='1' zindex="-2" count="100" src="/javascripts/canvas-nest.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const canvas = document.querySelector('canvas');
+				if (canvas) {
+					canvas.style.position = 'fixed';
+					canvas.style.top = '0';
+					canvas.style.left = '0';
+				}
+			});
+		</script>
 	</body>
 </html>
