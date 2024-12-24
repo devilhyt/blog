@@ -55,7 +55,7 @@ async function generateArticles(authorAmount, articles) {
             \`updatedAt\` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (\`id\`),
             KEY \`user_id\` (\`user_id\`),
-            CONSTRAINT \`article_ibfk_4\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT \`article_user_cascade\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
@@ -89,8 +89,8 @@ async function generateMessages(messages) {
             PRIMARY KEY (\`id\`),
             KEY \`user_id\` (\`user_id\`),
             KEY \`article_id\` (\`article_id\`),
-            CONSTRAINT \`message_ibfk_4\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE,
-            CONSTRAINT \`message_ibfk_5\` FOREIGN KEY (\`article_id\`) REFERENCES \`articles\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT \`message_user_cascade\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT \`message_article_cascade\` FOREIGN KEY (\`article_id\`) REFERENCES \`articles\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
     for (let i = 0; i < commentAmount; ++i) {
