@@ -21,7 +21,7 @@ async function generateUsers(authorAmount, userAmount) {
             \`id\` int NOT NULL AUTO_INCREMENT,
             \`is_admin\` int NOT NULL COMMENT '0 : normal, 1 : admin',
             \`name\` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-            \`account\` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+            \`account\` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
             \`password\` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
             \`createdAt\` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             \`updatedAt\` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
